@@ -1,9 +1,12 @@
 from selenium import webdriver as webdriver
 import os.path
-import json
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+import helper_methods
 
-with open('passwords.json','r') as file:
-    passwords = json.load(file)
+passwords = helper_methods.load_passwords(file_path='passwords.json')
 
 user_key = 'martin'
 user = passwords.get(user_key,None)
@@ -11,11 +14,10 @@ if user is None:
     raise ValueError('No user:%s' % user_key)
 
 browser = webdriver.Chrome()
+browser.implicitly_wait(100) # seconds
 
 browser.get('https://onlinebokning.pastelldata.com/1000/')
-
-browser.switch_to_frame('PASTELLDATA_WRAPPER_IFRAME_0')
-
+helper_methods.switch_to_frame(browser=browser)
 
 
 logga_in1 = browser.find_element_by_xpath(r'//*[@id="UserLoginInfoButton"]/div')
