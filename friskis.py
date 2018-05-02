@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import helper_methods
+import time
+sleep = 1
 
 passwords = helper_methods.load_passwords(file_path='passwords.json')
 
@@ -19,24 +21,17 @@ browser.implicitly_wait(100) # seconds
 browser.get('https://onlinebokning.pastelldata.com/1000/')
 helper_methods.switch_to_frame(browser=browser)
 
+#time.sleep(10)
+helper_methods.click_logga_in(browser=browser)
+time.sleep(sleep)
 
-logga_in1 = browser.find_element_by_xpath(r'//*[@id="UserLoginInfoButton"]/div')
-logga_in1.click()
+helper_methods.fill_in_username(browser=browser,user=user)
 
-user_name = browser.find_elements_by_id('UserName')[1]
-user_name.click()
-user_name.send_keys(user['user_name'])
+helper_methods.fill_in_password(browser=browser,user=user)
 
-
-password = browser.find_elements_by_id('Password')[1]
-password.click()
-password.send_keys(user['password'])
-
-logga_in2 = browser.find_element_by_xpath('//*[@id="QuickLoginForm"]/div[6]/div[1]/div/div')
-logga_in2.click()
+helper_methods.click_login2(browser=browser)
 
 
-day_buttons = browser.find_elements_by_class_name("DayButton")
 
 
 monday_button = None
