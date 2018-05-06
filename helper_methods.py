@@ -3,6 +3,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import json
+import datetime
+import time
+sleep = 3
+
+import logging
+logging.basicConfig(filename='friskis.log',level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
 
 wait = 30 #[s]
 
@@ -99,5 +105,167 @@ def click_login2(browser):
 def find_day_buttons(browser):
     try:
         day_buttons = WebDriverWait(browser,wait).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME,))
-            day_buttons = browser.find_elements_by_class_name("DayButton")
+            EC.presence_of_all_elements_located((By.CLASS_NAME,"DayButton")))
+    except:
+        raise
+
+    return day_buttons
+
+def _get_day_button_name(day):
+    days = ['MÅNDAG', 'TISDAG', 'ONSDAG', 'TORSDAG', 'FREDAG', 'LÖRDAG', 'SÖNDAG']
+
+    if not day in days:
+        raise ValueError('Invalid day format:%s' % day)
+
+    date = datetime.datetime.now()
+    today_i = date.weekday()
+    day_i = days.index(day)
+
+    if today_i == day_i:
+        return 'IDAG'
+
+    if (today_i + 1 == day_i) | (today_i + 1 == day_i + 7):
+        return 'IMORGON'
+
+    else:
+        return day
+
+def find_exercise_in_rows(rows,search_words):
+    exercise = None
+    for row in rows:
+        for search_word in search_words:
+            ok = True
+            if not search_word in row.text:
+                ok = False
+                break
+        if ok:
+            exercise = row
+            break
+
+    return exercise
+
+def book(browser,day,search_words):
+
+    logging.info('Do the booking: %s at %s' % (search_words,day))
+
+    logging.info('Get day button name...')
+    day_button_name = _get_day_button_name(day)
+
+    logging.info('Find the day button...')
+    day_buttons = find_day_buttons(browser=browser)
+
+    day_button_dict = {}
+    for day_button in day_buttons:
+        day_button_dict[day_button.text] = day_button
+
+    if not (day_button_name in day_button_dict):
+        raise ValueError('Cannot find %s button' % day_button_name)
+
+    day_button = day_button_dict[day_button_name]
+    logging.info('Click the day button')
+    day_button.click()
+
+    logging.info('Load all the rows...')
+    try:
+        rows = WebDriverWait(browser,wait).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
+        )
+    except:
+        raise
+    else:
+        logging.info('Rows loaded. Now find the exercise...')
+        exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
+
+    if exercise is None:
+        raise ValueError('Cannot find the exercise:%s on %s' % (search_words,day))
+
+    logging.info('Exercise found, now click on it...')
+    exercise.click()
+
+    try:
+        book_button = WebDriverWait(browser,wait).until(
+            EC.element_to_be_clickable((By.CLASS_NAME,'ModalBookButton'))
+        )
+    except:
+        raise
+
+    logging.info('Now click the book button')
+    book_button.click()
+
+    #Check error status if present:
+    try:
+        book_status = browser.find_element_by_class_name('BookStatus')
+    except:
+        pass
+    else:
+        if not (book_status.text == 'Bokning genomförd'):
+            raise ValueError(book_status.text)
+
+    logging.info('Check the booking...')
+    #Check the booking:
+    #try:
+    #    element = WebDriverWait(browser, wait).until(
+#    #        EC.frame_to_be_available_and_switch_to_it('PASTELLDATA_WRAPPER_IFRAME_0')
+    #    )
+    #except:
+    #    raise
+
+    try:
+        bokningar = WebDriverWait(browser,wait).until(
+            EC.element_to_be_clickable((By.XPATH,r'//*[@id="bs-example-navbar-collapse-1"]/div/div[1]/div[1]/div/div/div[3]/div'))
+        )
+    except:
+        raise
+
+    bokningar.click()
+
+    try:
+        rows = WebDriverWait(browser,wait).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
+        )
+    except:
+        raise
+
+    exercise = find_exercise_in_rows(rows=rows,search_words = search_words)
+
+    if exercise is None:
+        raise ValueError('Failed to book the exercise:%s on %s' % (search_words,day))
+    else:
+        return exercise.text
+
+
+def logon_user_and_book(browser,user,day,search_words):
+
+    logging.info('Loging in:%s' % user['user_name'])
+
+    logging.info('Go to friskis...')
+    browser.get('https://onlinebokning.pastelldata.com/1000/')
+    switch_to_frame(browser=browser)
+
+    # time.sleep(10)
+    logging.info('Logging in')
+    click_logga_in(browser=browser)
+    time.sleep(sleep)
+
+    logging.info('Filling in user name')
+    fill_in_username(browser=browser, user=user)
+
+    logging.info('Filling in password')
+    fill_in_password(browser=browser, user=user)
+
+    logging.info('Click on the logon button')
+    click_login2(browser=browser)
+    logging.info('Logon for:%s, successfull!' % user['user_name'])
+
+    # helper_methods.book(browser=browser,
+    #                    day = 'MÅNDAG',
+    #                    search_words=['Inspiration med tränare','Västra Hamngatan'])
+
+    try:
+        exercise_text = book(browser=browser,day=day,search_words=search_words)
+    except:
+        raise
+    else:
+        return_string =  '%s is now booked on the exercise:%s' % (user['user_name'],exercise_text)
+        return return_string
+
