@@ -1,4 +1,5 @@
 from selenium import webdriver as webdriver
+from pyvirtualdisplay import Display
 import os.path
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,24 +22,25 @@ user = passwords.get(user_key,None)
 if user is None:
     raise ValueError('No user:%s' % user_key)
 
-try:
-    logging.info('Create a browser...')
-    browser = webdriver.Firefox()
-    logging.info('Create a browser created')
+with Display():
 
-    browser.implicitly_wait(100) # seconds
+    try:
+        logging.info('Create a browser...')
+        browser = webdriver.Firefox()
+        logging.info('Create a browser created')
 
-    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Yoga', 'Torslanda'])
+        browser.implicitly_wait(100) # seconds
 
-except Exception as e:
+        return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Yoga', 'Torslanda'])
 
-    return_string = str(e)
-    logging.error(return_string)
+    except Exception as e:
 
-else:
-    logging.info(return_string)
+        return_string = str(e)
+        logging.error(return_string)
 
-browser.quit()
+    finally:
+        logging.info(return_string)
+        browser.quit()
 
 # Import smtplib for the actual sending function
 import smtplib
