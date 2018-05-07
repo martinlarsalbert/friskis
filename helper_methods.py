@@ -5,6 +5,8 @@ from selenium.webdriver.common.by import By
 import json
 import datetime
 import time
+import pdb
+
 sleep = 3
 
 import logging
@@ -169,9 +171,9 @@ def book(browser,day,search_words):
 
     logging.info('Click the day button')
 
-
-    #day_button.click()
-    day_buttons[i].click()
+    pdb.set_trace()
+    day_button.click()
+    #day_buttons[i].click()
     logging.info('Wait 5 s')
     time.sleep(5)
 
