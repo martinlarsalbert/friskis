@@ -82,7 +82,3 @@ else:
     logging.info('Email has been send')
 
 logging.info('________________ Friskis has ended ______________')
-
-
-
-

@@ -174,6 +174,8 @@ def book(browser,day,search_words):
     logging.info('Click the day button')
 
     #pdb.set_trace()
+    day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[3]/div')
+
     day_button.click()
     #day_buttons[i].click()
     logging.info('Wait 5 s')
