@@ -172,7 +172,7 @@ def book(browser,day,search_words):
 
     #day_button.click()
     day_buttons[i].click()
-    logging.infor('Wait 5 s')
+    logging.info('Wait 5 s')
     time.sleep(5)
 
 
