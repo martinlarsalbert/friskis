@@ -103,13 +103,14 @@ def click_login2(browser):
     logga_in2.click()
 
 def find_day_buttons(browser):
-    try:
-        day_buttons = WebDriverWait(browser,wait).until(
-            EC.visibility_of_all_elements_located((By.CLASS_NAME,"DayButton")))
-            #EC.presence_of_all_elements_located((By.CLASS_NAME,"DayButton")))
-    except:
-        raise
+    #try:
+    #    day_buttons = WebDriverWait(browser,wait).until(
+    #        EC.presence_of_all_elements_located((By.CLASS_NAME,"DayButton")))#
+    #except:
+    #    raise
 
+    day_buttons = browser.find_elements_by_class_name()
+    
     return day_buttons
 
 def _get_day_button_name(day):

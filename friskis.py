@@ -86,7 +86,3 @@ logging.info('________________ Friskis has ended ______________')
 
 
 
-
-
-
-
