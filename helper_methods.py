@@ -152,19 +152,21 @@ def book(browser,day,search_words):
 
     logging.info('Get day button name...')
     day_button_name = _get_day_button_name(day)
+    logging.info('Day button name is:%s' % day_button_name)
 
     logging.info('Find the day button...')
     day_buttons = find_day_buttons(browser=browser)
-    logging.info('Day buttons have been found')
+    logging.info('The following day buttons have been found')
 
-    day_button_dict = {}
+    ok = False
     for day_button in day_buttons:
-        day_button_dict[day_button.text] = day_button
+        if day_button.text == day_button_name:
+            ok = True
+            break
 
-    if not (day_button_name in day_button_dict):
+    if not ok:
         raise ValueError('Cannot find %s button' % day_button_name)
 
-    day_button = day_button_dict[day_button_name]
     logging.info('Click the day button')
     day_button.click()
 
