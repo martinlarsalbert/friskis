@@ -159,7 +159,7 @@ def book(browser,day,search_words):
     logging.info('The following day buttons have been found')
 
     ok = False
-    for day_button in day_buttons:
+    for i,day_button in enumerate(day_buttons):
         if day_button.text == day_button_name:
             ok = True
             break
@@ -168,7 +168,13 @@ def book(browser,day,search_words):
         raise ValueError('Cannot find %s button' % day_button_name)
 
     logging.info('Click the day button')
-    day_button.click()
+
+
+    #day_button.click()
+    day_buttons[i].click()
+    logging.infor('Wait 5 s')
+    time.sleep(5)
+
 
     logging.info('Load all the rows...')
     try:
