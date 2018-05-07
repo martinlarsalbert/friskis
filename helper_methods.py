@@ -109,8 +109,8 @@ def find_day_buttons(browser):
     #except:
     #    raise
 
-    day_buttons = browser.find_elements_by_class_name()
-    
+    day_buttons = browser.find_elements_by_class_name("DayButton")
+
     return day_buttons
 
 def _get_day_button_name(day):
