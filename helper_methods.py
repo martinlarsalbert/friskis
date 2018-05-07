@@ -157,7 +157,9 @@ def book(browser,day,search_words):
     logging.info('Day button name is:%s' % day_button_name)
 
     logging.info('Find the day button...')
-    day_buttons = find_day_buttons(browser=browser)
+    #day_buttons = find_day_buttons(browser=browser)
+    day_buttons = browser.find_elements_by_class_name("DayButton")
+
     logging.info('The following day buttons have been found')
 
     ok = False
@@ -171,7 +173,7 @@ def book(browser,day,search_words):
 
     logging.info('Click the day button')
 
-    pdb.set_trace()
+    #pdb.set_trace()
     day_button.click()
     #day_buttons[i].click()
     logging.info('Wait 5 s')
