@@ -105,7 +105,8 @@ def click_login2(browser):
 def find_day_buttons(browser):
     try:
         day_buttons = WebDriverWait(browser,wait).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME,"DayButton")))
+            EC.visibility_of_all_elements_located((By.CLASS_NAME,"DayButton")))
+            #EC.presence_of_all_elements_located((By.CLASS_NAME,"DayButton")))
     except:
         raise
 
@@ -153,6 +154,7 @@ def book(browser,day,search_words):
 
     logging.info('Find the day button...')
     day_buttons = find_day_buttons(browser=browser)
+    logging.info('Day buttons have been found')
 
     day_button_dict = {}
     for day_button in day_buttons:
