@@ -1,5 +1,5 @@
 from selenium import webdriver as webdriver
-from pyvirtualdisplay import Display
+
 import os.path
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -9,9 +9,21 @@ import helper_methods
 import time
 import smtplib
 sleep = 3
-
 import logging
-logging.basicConfig(filename='friskis.log',level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
+import sys
+from logging import handlers
+
+log = logging.getLogger('')
+log.setLevel(logging.INFO)
+format = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+
+ch = logging.StreamHandler(sys.stdout)
+ch.setFormatter(format)
+log.addHandler(ch)
+
+fh = handlers.RotatingFileHandler('friskis.log', maxBytes=(1048576*5), backupCount=7)
+fh.setFormatter(format)
+log.addHandler(fh)
 
 logging.info('\n\n____________ Friskis is launched _____________')
 
@@ -22,27 +34,27 @@ user = passwords.get(user_key,None)
 if user is None:
     raise ValueError('No user:%s' % user_key)
 
-with Display():
+try:
+    logging.info('Create a browser...')
+    browser = webdriver.Firefox()
+    logging.info('Create a browser created')
 
-    try:
-        logging.info('Create a browser...')
-        browser = webdriver.Firefox()
-        logging.info('Create a browser created')
+    browser.implicitly_wait(100) # seconds
 
-        browser.implicitly_wait(100) # seconds
+    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Yoga', 'Torslanda'])
 
-        return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Yoga', 'Torslanda'])
+except Exception as e:
 
-    except Exception as e:
+    return_string = str(e)
+    logging.error(return_string)
 
-        return_string = str(e)
-        logging.error(return_string)
+    browser.save_screenshot(filename='error.png')
 
-    finally:
-        logging.info(return_string)
-        browser.quit()
+finally:
+    logging.info(return_string)
+    browser.quit()
 
-# Import smtplib for the actual sending function
+# mport smtplib for the actual sending function
 import smtplib
 
 # Import the email modules we'll need
