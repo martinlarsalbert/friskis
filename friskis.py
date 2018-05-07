@@ -48,7 +48,9 @@ except Exception as e:
     return_string = str(e)
     logging.error(return_string)
 
-    browser.save_screenshot(filename='error.png')
+    filename = 'error.png'
+    browser.save_screenshot(filename=filename)
+    logging.info('screen shot has been saved to:%s' % filename)
 
 finally:
     logging.info(return_string)
