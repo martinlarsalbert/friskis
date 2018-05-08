@@ -179,8 +179,7 @@ def book(browser,day,search_words):
     day_button.click()
     #day_buttons[i].click()
     logging.info('Wait 5 s')
-    time.sleep(2)
-    day_button.click()
+    time.sleep(5)
 
     logging.info('Load all the rows...')
     try:
