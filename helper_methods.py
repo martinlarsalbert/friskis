@@ -174,12 +174,13 @@ def book(browser,day,search_words):
     day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[2]')
 
     logging.info('The following day buttons have been found: %s' % day_button.text)
+    time.sleep(20)
 
     logging.info('Click the day button')
     day_button.click()
     #day_buttons[i].click()
-    logging.info('Wait 5 s')
-    time.sleep(5)
+    logging.info('Wait 20 s')
+    time.sleep(20)
 
     logging.info('Load all the rows...')
     try:
