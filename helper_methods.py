@@ -183,7 +183,7 @@ def book(browser,day,search_words):
     logging.info('Wait 20 s')
     #time.sleep(5)
 
-
+    browser.switch_to_default_content()
     logging.info('Load all the rows...')
     try:
         rows = WebDriverWait(browser,wait).until(
