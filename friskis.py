@@ -41,7 +41,7 @@ try:
 
     browser.implicitly_wait(100) # seconds
 
-    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Yoga', 'Torslanda'])
+    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'LÖRDAG',search_words=['Yoga', 'Johanneberg'])
 
 except Exception as e:
 
@@ -82,5 +82,3 @@ else:
     logging.info('Email has been send')
 
 logging.info('________________ Friskis has ended ______________')
-
-browser.find
