@@ -12,7 +12,7 @@ sleep = 3
 import logging
 logging.basicConfig(filename='friskis.log',level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
 
-wait = 30 #[s]
+wait = 10 #[s]
 
 def load_passwords(file_path = 'passwords.json'):
     with open(file_path,'r') as file:
@@ -158,20 +158,20 @@ def book(browser,day,search_words):
 
     logging.info('Find the day button...')
     #day_buttons = find_day_buttons(browser=browser)
-    day_buttons = browser.find_elements_by_class_name("DayButton")
+    #day_buttons = browser.find_elements_by_class_name("DayButton")
 
-    ok = False
-    for i,day_button in enumerate(day_buttons):
-        if day_button.text == day_button_name:
-            ok = True
-            break
-
-    if not ok:
-        raise ValueError('Cannot find %s button' % day_button_name)
+    #ok = False
+    #f#or i,day_button in enumerate(day_buttons):
+    #    if day_button.text == day_button_name:
+    #        ok = True
+    #        break
+#
+    #if not ok:
+    #    raise ValueError('Cannot find %s button' % day_button_name)
 
 
     #pdb.set_trace()
-    #day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[2]')
+    day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]')
 
     logging.info('The following day buttons have been found: %s' % day_button.text)
     #time.sleep(20)
@@ -181,7 +181,7 @@ def book(browser,day,search_words):
     day_button.click()
     #day_buttons[i].click()
     logging.info('Wait 20 s')
-    time.sleep(5)
+    #time.sleep(5)
 
 
     logging.info('Load all the rows...')
