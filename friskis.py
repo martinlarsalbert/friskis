@@ -39,7 +39,7 @@ try:
     browser = webdriver.Firefox()
     logging.info('Create a browser created')
 
-    browser.implicitly_wait(100) # seconds
+    browser.implicitly_wait(10) # seconds
 
     return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'LÖRDAG',search_words=['Yoga', 'Johanneberg'])
 
