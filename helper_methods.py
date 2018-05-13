@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -158,44 +161,45 @@ def book(browser,day,search_words):
 
     logging.info('Find the day button...')
     #day_buttons = find_day_buttons(browser=browser)
-    #day_buttons = browser.find_elements_by_class_name("DayButton")
+    day_buttons = browser.find_elements_by_class_name("SelectedButton")
 
-    #ok = False
-    #f#or i,day_button in enumerate(day_buttons):
-    #    if day_button.text == day_button_name:
-    #        ok = True
-    #        break
+    ok = False
+    for i,day_button in enumerate(day_buttons):
+        if day_button.text == day_button_name:
+            ok = True
+            real_day_button = day_button
+            break
 #
     #if not ok:
     #    raise ValueError('Cannot find %s button' % day_button_name)
 
 
     #pdb.set_trace()
-    day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
+    real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
 
-    logging.info('The following day buttons have been found: %s' % day_button.text)
+    logging.info('The following day buttons have been found: %s' % real_day_button.text)
     #time.sleep(20)
 
     logging.info('Click the day button')
 
-    day_button.click()
-    time.sleep(1)
-    day_button.click()
-    #day_buttons[i].click()
-    logging.info('Wait 20 s')
-    #time.sleep(5)
+    real_day_button.click()
 
-    browser.switch_to_default_content()
+    logging.info('Wait 20 s')
+
+    #browser.switch_to_default_content()
     logging.info('Load all the rows...')
-    try:
-        rows = WebDriverWait(browser,wait).until(
-            EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
-        )
-    except:
-        raise
-    else:
-        logging.info('Rows loaded. Now find the exercise...')
-        exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
+    #try:
+    #    rows = WebDriverWait(browser,wait).until(
+    #        EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
+    #    )
+    #except:
+    #    raise
+    #else:
+    #    logging.info('Rows loaded. Now find the exercise...')
+    #    exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
+
+    rows = browser.find_elements_by_class_name('PGridRow')
+    exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
 
     if exercise is None:
         raise ValueError('Cannot find the exercise:%s on %s' % (search_words,day))
