@@ -170,8 +170,8 @@ def book(browser,day,search_words):
             real_day_button = day_button
             break
 #
-    #if not ok:
-    #    raise ValueError('Cannot find %s button' % day_button_name)
+    if not ok:
+        raise ValueError('Cannot find %s button' % day_button_name)
 
 
     #pdb.set_trace()
