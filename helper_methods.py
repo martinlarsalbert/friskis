@@ -175,7 +175,7 @@ def book(browser,day,search_words):
 
 
     #pdb.set_trace()
-    real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
+    #real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
 
     logging.info('The following day buttons have been found: %s' % real_day_button.text)
     #time.sleep(20)
@@ -188,17 +188,17 @@ def book(browser,day,search_words):
 
     #browser.switch_to_default_content()
     logging.info('Load all the rows...')
-    #try:
-    #    rows = WebDriverWait(browser,wait).until(
-    #        EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
-    #    )
-    #except:
-    #    raise
-    #else:
-    #    logging.info('Rows loaded. Now find the exercise...')
-    #    exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
+    try:
+        rows = WebDriverWait(browser,wait).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME,'PGridRow'))
+        )
+    except:
+        raise
+    else:
+        logging.info('Rows loaded. Now find the exercise...')
+        exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
 
-    rows = browser.find_elements_by_class_name('PGridRow')
+    #rows = browser.find_elements_by_class_name('PGridRow')
     exercise = find_exercise_in_rows(rows = rows,search_words = search_words)
 
     if exercise is None:

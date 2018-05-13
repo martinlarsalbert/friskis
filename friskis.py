@@ -44,7 +44,7 @@ try:
 
     browser.implicitly_wait(10) # seconds
 
-    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['HIT', 'Lackarebäck'])
+    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Spinning soft', 'Johanneberg'])
 
 except Exception as e:
 
