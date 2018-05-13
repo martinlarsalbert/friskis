@@ -164,18 +164,18 @@ def book(browser,day,search_words):
     day_buttons = browser.find_elements_by_class_name("SelectedButton")
 
     ok = False
-    for i,day_button in enumerate(day_buttons):
-        if day_button.text == day_button_name:
-            ok = True
-            real_day_button = day_button
-            break
+    #for i,day_button in enumerate(day_buttons):
+    #    if day_button.text == day_button_name:
+    #        ok = True
+    #        real_day_button = day_button
+    #        break
 #
-    if not ok:
-        raise ValueError('Cannot find %s button' % day_button_name)
+    #if not ok:
+    #    raise ValueError('Cannot find %s button' % day_button_name)
 
 
     #pdb.set_trace()
-    #real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
+    real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]/div')
 
     logging.info('The following day buttons have been found: %s' % real_day_button.text)
     #time.sleep(20)
