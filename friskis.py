@@ -16,73 +16,78 @@ import logging
 import sys
 from logging import handlers
 
-log = logging.getLogger('')
-log.setLevel(logging.INFO)
-format = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+def run_friskis():
 
-ch = logging.StreamHandler(sys.stdout)
-ch.setFormatter(format)
-log.addHandler(ch)
+    log = logging.getLogger('')
+    log.setLevel(logging.INFO)
+    format = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 
-fh = handlers.RotatingFileHandler('friskis.log', maxBytes=(1048576*5), backupCount=7)
-fh.setFormatter(format)
-log.addHandler(fh)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setFormatter(format)
+    log.addHandler(ch)
 
-logging.info('\n\n____________ Friskis is launched _____________')
+    fh = handlers.RotatingFileHandler('friskis.log', maxBytes=(1048576*5), backupCount=7)
+    fh.setFormatter(format)
+    log.addHandler(fh)
 
-passwords = helper_methods.load_passwords(file_path='passwords.json')
+    logging.info('\n\n____________ Friskis is launched _____________')
 
-user_key = 'martin'
-user = passwords.get(user_key,None)
-if user is None:
-    raise ValueError('No user:%s' % user_key)
+    passwords = helper_methods.load_passwords(file_path='passwords.json')
 
-try:
-    logging.info('Create a browser...')
-    browser = webdriver.Firefox()
-    logging.info('Create a browser created')
+    user_key = 'martin'
+    user = passwords.get(user_key,None)
+    if user is None:
+        raise ValueError('No user:%s' % user_key)
 
-    browser.implicitly_wait(10) # seconds
+    try:
+        logging.info('Create a browser...')
+        browser = webdriver.Firefox()
+        logging.info('Create a browser created')
 
-    return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'ONSDAG',search_words=['Spinning soft', 'Johanneberg'])
+        browser.implicitly_wait(10) # seconds
 
-except Exception as e:
+        return_string = helper_methods.logon_user_and_book(browser=browser,user = user,day = 'FREDAG',search_words=['Spinning intervall Play'])
 
-    return_string = str(e)
-    logging.error(return_string)
+    except Exception as e:
 
-    filename = 'error.png'
-    browser.save_screenshot(filename=filename)
-    logging.info('screen shot has been saved to:%s' % filename)
+        return_string = str(e)
+        logging.error(return_string)
 
-finally:
-    logging.info(return_string)
-    browser.quit()
+        filename = 'error.png'
+        browser.save_screenshot(filename=filename)
+        logging.info('screen shot has been saved to:%s' % filename)
 
-# mport smtplib for the actual sending function
-import smtplib
+    finally:
+        logging.info(return_string)
+        browser.quit()
 
-# Import the email modules we'll need
-from email.message import EmailMessage
+    # mport smtplib for the actual sending function
+    import smtplib
 
-msg = EmailMessage()
+    # Import the email modules we'll need
+    from email.message import EmailMessage
 
-me = "marale@kth.se"
-you = "marale@kth.se"
-msg['Subject'] = 'Friskis booking'
-msg['From'] = me
-msg['To'] = you
-msg.set_content(return_string)
+    msg = EmailMessage()
 
-# Send the message via our own SMTP server.
-try:
-    s = smtplib.SMTP('localhost')
-    s.send_message(msg)
-except:
-    logging.error('Failed to email')
-else:
-    s.quit()
-    logging.info('Email has been send')
+    me = "marale@kth.se"
+    you = "marale@kth.se"
+    msg['Subject'] = 'Friskis booking'
+    msg['From'] = me
+    msg['To'] = you
+    msg.set_content(return_string)
 
-logging.info('________________ Friskis has ended ______________')
+    # Send the message via our own SMTP server.
+    try:
+        s = smtplib.SMTP('localhost')
+        s.send_message(msg)
+    except:
+        logging.error('Failed to email')
+    else:
+        s.quit()
+        logging.info('Email has been send')
 
+    logging.info('________________ Friskis has ended ______________')
+
+
+if __name__ == '__main__':
+    run_friskis()

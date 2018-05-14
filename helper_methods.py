@@ -15,7 +15,7 @@ sleep = 3
 import logging
 logging.basicConfig(filename='friskis.log',level=logging.INFO,format='%(asctime)s %(levelname)s %(message)s')
 
-wait = 10 #[s]
+wait = 20 #[s]
 
 def load_passwords(file_path = 'passwords.json'):
     with open(file_path,'r') as file:
@@ -161,30 +161,30 @@ def book(browser,day,search_words):
 
     logging.info('Find the day button...')
     #day_buttons = find_day_buttons(browser=browser)
-    day_buttons = browser.find_elements_by_class_name("SelectedButton")
+    #day_buttons = browser.find_elements_by_class_name("DayButton")
 
-    ok = False
+    #ok = False
     #for i,day_button in enumerate(day_buttons):
     #    if day_button.text == day_button_name:
     #        ok = True
     #        real_day_button = day_button
     #        break
-#
+
     #if not ok:
     #    raise ValueError('Cannot find %s button' % day_button_name)
 
 
     #pdb.set_trace()
-    real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[1]/div/div/div[4]')
+    real_day_button = browser.find_element_by_xpath(r'//*[@id="viewtabcontrol"]/div/div[2]/div/div/div[1]/div/div/div[2]/div/div/div[1]/div')
 
     logging.info('The following day buttons have been found: %s' % real_day_button.text)
-    #time.sleep(20)
+    #time.sleep(5)
 
     logging.info('Click the day button')
 
     real_day_button.click()
-
     logging.info('Wait 20 s')
+    #time.sleep(5)
 
     #browser.switch_to_default_content()
     logging.info('Load all the rows...')
@@ -216,6 +216,8 @@ def book(browser,day,search_words):
 
     logging.info('Now click the book button')
     browser.switch_to_default_content()
+    switch_to_frame(browser=browser)
+
     book_button.click()
 
     #Check error status if present:
@@ -224,17 +226,19 @@ def book(browser,day,search_words):
     except:
         pass
     else:
-        if not (book_status.text == 'Bokning genomförd'):
+        if (book_status.text == 'Bokning genomförd'):
+            return exercise.text
+        else:
             raise ValueError(book_status.text)
 
     logging.info('Check the booking...')
     #Check the booking:
-    #try:
-    #    element = WebDriverWait(browser, wait).until(
-#    #        EC.frame_to_be_available_and_switch_to_it('PASTELLDATA_WRAPPER_IFRAME_0')
-    #    )
-    #except:
-    #    raise
+    try:
+        element = WebDriverWait(browser, wait).until(
+           EC.frame_to_be_available_and_switch_to_it('PASTELLDATA_WRAPPER_IFRAME_0')
+        )
+    except:
+        raise
 
     try:
         bokningar = WebDriverWait(browser,wait).until(

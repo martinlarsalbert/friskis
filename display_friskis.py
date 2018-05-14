@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyvirtualdisplay import Display
+import friskis
 
 with Display():
-    import friskis
+    friskis.run_friskis()
